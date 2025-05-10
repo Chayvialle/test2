@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Quiz Débutant - Teams</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .container {
+      max-width: 800px;
+      background: white;
+      padding: 25px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    h1 {
+      color: #0078d4;
+      text-align: center;
+    }
+    .question-block {
+      margin-bottom: 30px;
+      background: #f9f9f9;
+      padding: 20px;
+      border-radius: 5px;
+      border: 1px solid #ddd;
+    }
+    .options label {
+      display: block;
+      padding: 10px;
+      margin-bottom: 8px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      cursor: pointer;
+      background: #fff;
+      transition: background 0.3s;
+    }
+    .options input[type="radio"] {
+      display: none;
+    }
+    .options label::before {
+      content: '';
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      border: 2px solid #0078d4;
+      border-radius: 50%;
+      margin-right: 10px;
+      vertical-align: middle;
+      background: white;
+    }
+    .options input[type="radio"]:checked + label::before {
+      background: #0078d4;
+      box-shadow: inset 0 0 0 3px white;
+    }
+    .options input[type="radio"]:checked + label {
+      background-color: #d1e7ff;
+      font-weight: bold;
+    }
+    .feedback {
+      margin-top: 10px;
+      font-weight: bold;
+      border-radius: 4px;
+      padding: 10px;
+    }
+    .correct { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+    .incorrect { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+    .explanation { font-size: 0.9em; color: #555; margin-top: 5px; }
+    button {
+      margin-top: 15px;
+      padding: 10px 20px;
+      background-color: #0078d4;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      font-size: 1em;
+      cursor: pointer;
+    }
+    button:hover { background-color: #005a9e; }
+    #results { display: none; text-align: center; margin-top: 30px; background: #e9ecef; padding: 20px; border-radius: 5px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Quiz Débutant : Équipes et Canaux dans Teams</h1>
+    <form id="quiz-form">
+
+      <!-- Question 1 -->
+      <div class="question-block" id="q1">
+        <p><strong>Question 1 :</strong> Quelle est la relation correcte entre une "équipe" et un "canal" dans Teams ?</p>
+        <div class="options">
+          <input type="radio" id="q1a1" name="q1" value="a"><label for="q1a1">a) Un canal contient plusieurs équipes.</label>
+          <input type="radio" id="q1a2" name="q1" value="b"><label for="q1a2">b) Une équipe contient plusieurs canaux.</label>
+          <input type="radio" id="q1a3" name="q1" value="c"><label for="q1a3">c) Ils sont au même niveau.</label>
+          <input type="radio" id="q1a4" name="q1" value="d"><label for="q1a4">d) Les canaux sont indépendants des équipes.</label>
+        </div>
+        <div class="feedback" id="feedback-q1"></div>
+      </div>
+
+      <!-- Question 2 -->
+      <div class="question-block" id="q2">
+        <p><strong>Question 2 :</strong> Qu'est-ce qu'une "équipe" dans Teams, selon l'analogie du club sportif ?</p>
+        <div class="options">
+          <input type="radio" id="q2a1" name="q2" value="a"><label for="q2a1">a) L'ensemble du club.</label>
+          <input type="radio" id="q2a2" name="q2" value="b"><label for="q2a2">b) Un terrain d'entraînement.</label>
+          <input type="radio" id="q2a3" name="q2" value="c"><label for="q2a3">c) Une équipe spécifique (ex. équipe de foot).</label>
+          <input type="radio" id="q2a4" name="q2" value="d"><label for="q2a4">d) Un joueur individuel.</label>
+        </div>
+        <div class="feedback" id="feedback-q2"></div>
+      </div>
+
+      <!-- Question 3 -->
+      <div class="question-block" id="q3">
+        <p><strong>Question 3 :</strong> À quoi sert le canal "général" dans une équipe Teams ?</p>
+        <div class="options">
+          <input type="radio" id="q3a1" name="q3" value="a"><label for="q3a1">a) Discussions confidentielles.</label>
+          <input type="radio" id="q3a2" name="q3" value="b"><label for="q3a2">b) Sous-projets à accès restreint.</label>
+          <input type="radio" id="q3a3" name="q3" value="c"><label for="q3a3">c) Annonces et discussions générales.</label>
+          <input type="radio" id="q3a4" name="q3" value="d"><label for="q3a4">d) Inviter des personnes externes.</label>
+        </div>
+        <div class="feedback" id="feedback-q3"></div>
+      </div>
+
+      <button type="button" onclick="showResults()">Voir mon score final</button>
+    </form>
+
+    <div id="results">
+      <h2>Résultat</h2>
+      <p id="score"></p>
+      <p id="summary"></p>
+      <button onclick="location.reload()">Recommencer le quiz</button>
+    </div>
+  </div>
+
+  <script>
+    const correctAnswers = {
+      q1: { answer: 'b', explanation: "Une équipe contient plusieurs canaux pour organiser les sujets de discussion." },
+      q2: { answer: 'c', explanation: "Une équipe représente un groupe dédié dans l'organisation (comme une équipe de foot dans un club)." },
+      q3: { answer: 'c', explanation: "Le canal général sert aux annonces et discussions ouvertes à tous les membres de l’équipe." }
+    };
+
+    let score = 0;
+
+    function showResults() {
+      let allAnswered = true;
+      for (const q of Object.keys(correctAnswers)) {
+        const selected = document.querySelector(`input[name="${q}"]:checked`);
+        const feedback = document.getElementById(`feedback-${q}`);
+        if (!selected) {
+          allAnswered = false;
+          feedback.textContent = "Veuillez sélectionner une réponse.";
+          feedback.className = "feedback incorrect";
+          return;
+        }
+        const correct = correctAnswers[q].answer;
+        const explanation = correctAnswers[q].explanation;
+        if (selected.value === correct) {
+          score++;
+          feedback.textContent = "Correct !";
+          feedback.className = "feedback correct";
+        } else {
+          feedback.textContent = "Incorrect.";
+          feedback.className = "feedback incorrect";
+        }
+        const p = document.createElement("p");
+        p.className = "explanation";
+        p.textContent = "Explication : " + explanation;
+        if (!feedback.querySelector(".explanation")) {
+          feedback.appendChild(p);
+        }
+      }
+
+      if (allAnswered) {
+        document.getElementById("results").style.display = "block";
+        document.getElementById("score").textContent = `Votre score : ${score} / 3`;
+        document.getElementById("summary").textContent =
+          score === 3 ? "Parfait ! Vous avez bien compris les bases." :
+          score === 2 ? "Très bien ! Encore un petit effort." :
+          "Quelques révisions s’imposent sur les notions fondamentales.";
+      }
+    }
+  </script>
+</body>
+</html>
