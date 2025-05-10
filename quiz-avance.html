@@ -96,4 +96,95 @@
         <p><strong>Question 1 :</strong> Comment décririez-vous l'accès à un canal standard dans une équipe Teams ?</p>
         <div class="options">
           <input type="radio" id="q4a1" name="q4" value="a"><label for="q4a1">a) Seuls les propriétaires de l'équipe peuvent le voir.</label>
-          <input type="radio" id="q4a2" name="q4" value="b"><label for="q4a2">b) Il est visible et accessible par tous les membres de cette équipe spécifique
+          <input type="radio" id="q4a2" name="q4" value="b"><label for="q4a2">b) Il est visible et accessible par tous les membres de cette équipe spécifique.</label>
+          <input type="radio" id="q4a3" name="q4" value="c"><label for="q4a3">c) Il nécessite une invitation spéciale, même pour les membres de l'équipe.</label>
+          <input type="radio" id="q4a4" name="q4" value="d"><label for="q4a4">d) Il est utilisé pour collaborer avec des agences externes.</label>
+        </div>
+        <div class="feedback" id="feedback-q4"></div>
+      </div>
+
+      <!-- Question 5 -->
+      <div class="question-block" id="q5">
+        <p><strong>Question 2 :</strong> Quelle est la principale caractéristique d'un canal privé dans Teams ?</p>
+        <div class="options">
+          <input type="radio" id="q5a1" name="q5" value="a"><label for="q5a1">a) Il est ouvert à tous les membres de l'entreprise.</label>
+          <input type="radio" id="q5a2" name="q5" value="b"><label for="q5a2">b) Son accès est limité à des membres spécifiquement invités.</label>
+          <input type="radio" id="q5a3" name="q5" value="c"><label for="q5a3">c) Il est automatiquement supprimé après chaque réunion.</label>
+          <input type="radio" id="q5a4" name="q5" value="d"><label for="q5a4">d) Tous les messages y sont publics par défaut.</label>
+        </div>
+        <div class="feedback" id="feedback-q5"></div>
+      </div>
+
+      <!-- Question 6 -->
+      <div class="question-block" id="q6">
+        <p><strong>Question 3 :</strong> Quelle est la différence principale entre canal standard et canal privé ?</p>
+        <div class="options">
+          <input type="radio" id="q6a1" name="q6" value="a"><label for="q6a1">a) Les standards ont plus d'options de formatage.</label>
+          <input type="radio" id="q6a2" name="q6" value="b"><label for="q6a2">b) Les privés ne peuvent pas partager de fichiers.</label>
+          <input type="radio" id="q6a3" name="q6" value="c"><label for="q6a3">c) L'accès : les standards sont ouverts à tous les membres, les privés sont restreints.</label>
+          <input type="radio" id="q6a4" name="q6" value="d"><label for="q6a4">d) Les standards sont temporaires, les privés permanents.</label>
+        </div>
+        <div class="feedback" id="feedback-q6"></div>
+      </div>
+
+      <button type="button" onclick="showResults()">Voir mon score final</button>
+    </form>
+
+    <div id="results">
+      <h2>Résultat</h2>
+      <p id="score"></p>
+      <p id="summary"></p>
+      <button onclick="location.reload()">Recommencer le quiz</button>
+    </div>
+  </div>
+
+  <script>
+    const correctAnswers = {
+      q4: { answer: 'b', explanation: "Les canaux standards sont visibles et accessibles à tous les membres de l’équipe." },
+      q5: { answer: 'b', explanation: "Un canal privé limite l’accès uniquement aux membres invités spécifiquement." },
+      q6: { answer: 'c', explanation: "La différence principale est l’accès : standard = tous les membres, privé = restreint." }
+    };
+
+    let score = 0;
+
+    function showResults() {
+      let allAnswered = true;
+      for (const q of Object.keys(correctAnswers)) {
+        const selected = document.querySelector(`input[name="${q}"]:checked`);
+        const feedback = document.getElementById(`feedback-${q}`);
+        if (!selected) {
+          allAnswered = false;
+          feedback.textContent = "Veuillez sélectionner une réponse.";
+          feedback.className = "feedback incorrect";
+          return;
+        }
+        const correct = correctAnswers[q].answer;
+        const explanation = correctAnswers[q].explanation;
+        if (selected.value === correct) {
+          score++;
+          feedback.textContent = "Correct !";
+          feedback.className = "feedback correct";
+        } else {
+          feedback.textContent = "Incorrect.";
+          feedback.className = "feedback incorrect";
+        }
+        const p = document.createElement("p");
+        p.className = "explanation";
+        p.textContent = "Explication : " + explanation;
+        if (!feedback.querySelector(".explanation")) {
+          feedback.appendChild(p);
+        }
+      }
+
+      if (allAnswered) {
+        document.getElementById("results").style.display = "block";
+        document.getElementById("score").textContent = `Votre score : ${score} / 3`;
+        document.getElementById("summary").textContent =
+          score === 3 ? "Excellent ! Vous maîtrisez les canaux Teams." :
+          score === 2 ? "Très bien, encore un petit effort !" :
+          "N’hésitez pas à revoir les différences entre canaux standards et privés.";
+      }
+    }
+  </script>
+</body>
+</html>
