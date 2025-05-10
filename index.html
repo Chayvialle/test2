@@ -1,359 +1,45 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quiz : Comprendre les Équipes et Canaux Teams</title>
-    <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            line-height: 1.6;
-            margin: 0;
-            padding: 20px;
-            background-color: #f4f4f4;
-            color: #333;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        .container {
-            max-width: 800px;
-            width: 100%;
-            background-color: #fff;
-            padding: 25px;
-            border-radius: 8px;
-            box-shadow: 0 0 15px rgba(0,0,0,0.1);
-            margin-top: 20px;
-        }
-        h1 {
-            color: #0078d4; /* Couleur bleue Microsoft Teams */
-            text-align: center;
-            margin-bottom: 20px;
-        }
-        .question-block {
-            margin-bottom: 30px;
-            padding: 20px;
-            background-color: #f9f9f9;
-            border: 1px solid #eee;
-            border-radius: 5px;
-        }
-        .question-block h3 {
-            margin-top: 0;
-            color: #333;
-        }
-        .options label {
-            display: block;
-            margin-bottom: 10px;
-            padding: 10px;
-            background-color: #fff;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-        .options label:hover {
-            background-color: #eef6ff;
-        }
-        .options input[type="radio"] {
-            margin-right: 10px;
-            display: none; /* On cache le bouton radio par défaut */
-        }
-        /* Style pour le bouton radio personnalisé */
-        .options label::before {
-            content: '';
-            display: inline-block;
-            width: 18px;
-            height: 18px;
-            margin-right: 10px;
-            border: 2px solid #0078d4;
-            border-radius: 50%;
-            vertical-align: middle;
-            background-color: white;
-        }
-        .options input[type="radio"]:checked + label::before {
-            background-color: #0078d4;
-            border-color: #005a9e;
-            box-shadow: inset 0 0 0 3px white; /* Cercle intérieur blanc */
-        }
-         .options input[type="radio"]:checked + label {
-            background-color: #d1e7ff;
-            border-color: #0078d4;
-            font-weight: bold;
-        }
-
-        .feedback {
-            margin-top: 10px;
-            padding: 10px;
-            border-radius: 4px;
-            font-weight: bold;
-        }
-        .feedback.correct {
-            background-color: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-        }
-        .feedback.incorrect {
-            background-color: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
-        }
-        .explanation {
-            margin-top: 8px;
-            font-size: 0.9em;
-            color: #555;
-        }
-        button.check-answer, button#submit-quiz {
-            display: block;
-            margin-top: 15px;
-            padding: 10px 20px;
-            background-color: #0078d4;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 1em;
-            transition: background-color 0.3s ease;
-        }
-        button.check-answer:hover, button#submit-quiz:hover {
-            background-color: #005a9e;
-        }
-        button:disabled {
-            background-color: #ccc;
-            cursor: not-allowed;
-        }
-        #results {
-            margin-top: 30px;
-            padding: 20px;
-            background-color: #e9ecef;
-            border-radius: 5px;
-            text-align: center;
-        }
-        #results h2 {
-            color: #0078d4;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <title>Menu des Quiz Microsoft Teams</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f4f4f4;
+      text-align: center;
+      padding: 50px;
+    }
+    h1 {
+      color: #0078d4;
+      margin-bottom: 30px;
+    }
+    .menu {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 15px;
+    }
+    a {
+      text-decoration: none;
+      color: white;
+      background-color: #0078d4;
+      padding: 12px 24px;
+      border-radius: 8px;
+      width: 250px;
+      transition: background-color 0.3s;
+    }
+    a:hover {
+      background-color: #005a9e;
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Quiz : Équipes et Canaux dans Teams</h1>
-        <p>Testez votre compréhension des concepts clés de Microsoft Teams. Sélectionnez une réponse pour chaque question, puis cliquez sur "Vérifier ma réponse".</p>
-
-        <form id="quiz-form">
-            <div class="question-block" id="q1">
-                <h3>Question 1 : Niveau hiérarchique</h3>
-                <p>Dans Microsoft Teams, quelle est la relation correcte entre une "équipe" et un "canal" ?</p>
-                <div class="options">
-                    <input type="radio" id="q1a1" name="q1" value="a">
-                    <label for="q1a1">a) Un canal contient plusieurs équipes.</label>
-                    <input type="radio" id="q1a2" name="q1" value="b">
-                    <label for="q1a2">b) Une équipe contient plusieurs canaux.</label>
-                    <input type="radio" id="q1a3" name="q1" value="c">
-                    <label for="q1a3">c) Une équipe et un canal sont au même niveau.</label>
-                    <input type="radio" id="q1a4" name="q1" value="d">
-                    <label for="q1a4">d) Les canaux sont indépendants des équipes.</label>
-                </div>
-                <button type="button" class="check-answer" onclick="checkAnswer('q1', 'b')">Vérifier ma réponse</button>
-                <div class="feedback" id="feedback-q1"></div>
-            </div>
-
-            <div class="question-block" id="q2">
-                <h3>Question 2 : Définition d'une "équipe"</h3>
-                <p>En utilisant l'analogie du "grand club sportif" (votre entreprise), qu'est-ce qu'une "équipe" dans Microsoft Teams ?</p>
-                <div class="options">
-                    <input type="radio" id="q2a1" name="q2" value="a">
-                    <label for="q2a1">a) L'ensemble du grand club sportif.</label>
-                    <input type="radio" id="q2a2" name="q2" value="b">
-                    <label for="q2a2">b) Un terrain d'entraînement spécifique au sein du club.</label>
-                    <input type="radio" id="q2a3" name="q2" value="c">
-                    <label for="q2a3">c) Une équipe spécifique au sein du grand club, dédiée à un projet ou département (ex : l'équipe première de football).</label>
-                    <input type="radio" id="q2a4" name="q2" value="d">
-                    <label for="q2a4">d) Un joueur individuel du club.</label>
-                </div>
-                <button type="button" class="check-answer" onclick="checkAnswer('q2', 'c')">Vérifier ma réponse</button>
-                <div class="feedback" id="feedback-q2"></div>
-            </div>
-
-            <div class="question-block" id="q3">
-                <h3>Question 3 : Canal "général"</h3>
-                <p>À quoi sert principalement le canal "général" au sein d'une équipe Teams ?</p>
-                <div class="options">
-                    <input type="radio" id="q3a1" name="q3" value="a">
-                    <label for="q3a1">a) Uniquement aux discussions confidentielles du staff technique.</label>
-                    <input type="radio" id="q3a2" name="q3" value="b">
-                    <label for="q3a2">b) À organiser des sous-projets spécifiques avec accès restreint.</label>
-                    <input type="radio" id="q3a3" name="q3" value="c">
-                    <label for="q3a3">c) Aux annonces importantes et discussions concernant tous les membres de cette équipe spécifique.</label>
-                    <input type="radio" id="q3a4" name="q3" value="d">
-                    <label for="q3a4">d) À inviter des personnes extérieures à l'équipe.</label>
-                </div>
-                <button type="button" class="check-answer" onclick="checkAnswer('q3', 'c')">Vérifier ma réponse</button>
-                <div class="feedback" id="feedback-q3"></div>
-            </div>
-
-            <div class="question-block" id="q4">
-                <h3>Question 4 : Canaux standards</h3>
-                <p>Comment décririez-vous l'accès à un canal standard au sein d'une équipe Teams ?</p>
-                <div class="options">
-                    <input type="radio" id="q4a1" name="q4" value="a">
-                    <label for="q4a1">a) Seuls les propriétaires de l'équipe peuvent le voir.</label>
-                    <input type="radio" id="q4a2" name="q4" value="b">
-                    <label for="q4a2">b) Il est visible et accessible par tous les membres de cette équipe spécifique.</label>
-                    <input type="radio" id="q4a3" name="q4" value="c">
-                    <label for="q4a3">c) Il nécessite une invitation spéciale, même pour les membres de l'équipe.</label>
-                    <input type="radio" id="q4a4" name="q4" value="d">
-                    <label for="q4a4">d) Il est principalement utilisé pour collaborer avec des agences externes.</label>
-                </div>
-                <button type="button" class="check-answer" onclick="checkAnswer('q4', 'b')">Vérifier ma réponse</button>
-                <div class="feedback" id="feedback-q4"></div>
-            </div>
-
-            <div class="question-block" id="q5">
-                <h3>Question 5 : Canaux privés</h3>
-                <p>Quelle est la principale caractéristique d'un canal privé au sein d'une équipe Teams ?</p>
-                <div class="options">
-                    <input type="radio" id="q5a1" name="q5" value="a">
-                    <label for="q5a1">a) Il est ouvert à tous les membres de l'entreprise.</label>
-                    <input type="radio" id="q5a2" name="q5" value="b">
-                    <label for="q5a2">b) Son accès est limité uniquement aux membres de l'équipe qui y sont spécifiquement invités, pour des sujets sensibles.</label>
-                    <input type="radio" id="q5a3" name="q5" value="c">
-                    <label for="q5a3">c) Il est automatiquement supprimé après chaque réunion.</label>
-                    <input type="radio" id="q5a4" name="q5" value="d">
-                    <label for="q5a4">d) Tous les messages y sont publics par défaut.</label>
-                </div>
-                <button type="button" class="check-answer" onclick="checkAnswer('q5', 'b')">Vérifier ma réponse</button>
-                <div class="feedback" id="feedback-q5"></div>
-            </div>
-
-             <div class="question-block" id="q6">
-                <h3>Question 6 : Distinction clé</h3>
-                <p>Quelle est la différence fondamentale entre un canal standard et un canal privé au sein de la même équipe ?</p>
-                <div class="options">
-                    <input type="radio" id="q6a1" name="q6" value="a">
-                    <label for="q6a1">a) Les canaux standards ont plus d'options de formatage de message.</label>
-                    <input type="radio" id="q6a2" name="q6" value="b">
-                    <label for="q6a2">b) Les canaux privés ne peuvent pas partager de fichiers.</label>
-                    <input type="radio" id="q6a3" name="q6" value="c">
-                    <label for="q6a3">c) L'accès : les canaux standards sont ouverts à tous les membres de l'équipe, tandis que les canaux privés sont restreints à des membres invités.</label>
-                    <input type="radio" id="q6a4" name="q6" value="d">
-                    <label for="q6a4">d) Les canaux standards sont temporaires, les canaux privés sont permanents.</label>
-                </div>
-                <button type="button" class="check-answer" onclick="checkAnswer('q6', 'c')">Vérifier ma réponse</button>
-                <div class="feedback" id="feedback-q6"></div>
-            </div>
-
-            <button type="button" id="submit-quiz" onclick="showResults()">Voir mon score final</button>
-        </form>
-
-        <div id="results" style="display:none;">
-            <h2>Résultats du Quiz</h2>
-            <p id="score"></p>
-            <p id="summary"></p>
-        </div>
-    </div>
-
-    <script>
-        // Objet pour stocker les réponses correctes et les explications
-        const correctAnswersDetails = {
-            q1: { answer: 'b', explanation: "Une 'équipe' est le conteneur principal qui peut héberger plusieurs 'canaux' pour organiser le travail et les conversations." },
-            q2: { answer: 'c', explanation: "Une 'équipe' Teams est comme une équipe spécifique (ex: l'équipe première) au sein d'un plus grand 'club' (votre entreprise). Elle regroupe des personnes pour un objectif commun." },
-            q3: { answer: 'c', explanation: "Le canal 'général' est le lieu par défaut pour les annonces et les discussions qui concernent tous les membres de l'équipe." },
-            q4: { answer: 'b', explanation: "Les canaux standards sont ouverts et accessibles à tous les membres de l'équipe à laquelle ils appartiennent." },
-            q5: { answer: 'b', explanation: "Les canaux privés sont conçus pour des discussions confidentielles et ne sont accessibles qu'aux membres de l'équipe qui y ont été explicitement invités." },
-            q6: { answer: 'c', explanation: "La différence majeure réside dans la gestion de l'accès : les canaux standards sont ouverts à tous les membres de l'équipe, les canaux privés ont un accès restreint et contrôlé." }
-        };
-
-        // Tableau pour suivre les réponses de l'utilisateur et si elles sont correctes
-        let userAnswers = { q1: null, q2: null, q3: null, q4: null, q5: null, q6: null };
-        let score = 0;
-        const totalQuestions = Object.keys(correctAnswersDetails).length;
-
-        // Fonction pour vérifier la réponse d'une question spécifique
-        function checkAnswer(questionId, correctAnswerKey) {
-            const selectedOption = document.querySelector(`input[name="${questionId}"]:checked`);
-            const feedbackDiv = document.getElementById(`feedback-${questionId}`);
-            const questionBlock = document.getElementById(questionId);
-            const checkButton = questionBlock.querySelector('.check-answer');
-
-            if (!selectedOption) {
-                feedbackDiv.textContent = "Veuillez sélectionner une réponse.";
-                feedbackDiv.className = 'feedback incorrect'; // Style d'erreur
-                feedbackDiv.style.display = 'block';
-                return;
-            }
-
-            const userAnswer = selectedOption.value;
-            const details = correctAnswersDetails[questionId];
-
-            if (userAnswer === details.answer) {
-                feedbackDiv.textContent = "Correct !";
-                feedbackDiv.className = 'feedback correct';
-                if (userAnswers[questionId] === null) { // Compter le score seulement la première fois
-                    score++;
-                }
-                userAnswers[questionId] = true; // Marquer comme correct
-            } else {
-                feedbackDiv.textContent = "Incorrect.";
-                feedbackDiv.className = 'feedback incorrect';
-                userAnswers[questionId] = false; // Marquer comme incorrect
-            }
-            
-            // Afficher l'explication
-            const explanationP = document.createElement('p');
-            explanationP.className = 'explanation';
-            explanationP.textContent = "Explication : " + details.explanation;
-            // S'assurer de ne pas ajouter plusieurs fois l'explication
-            if (!feedbackDiv.querySelector('.explanation')) {
-                 feedbackDiv.appendChild(explanationP);
-            }
-           
-            feedbackDiv.style.display = 'block';
-            checkButton.disabled = true; // Désactiver le bouton après vérification
-            
-            // Désactiver les options radio pour cette question
-            const radioButtons = document.querySelectorAll(`input[name="${questionId}"]`);
-            radioButtons.forEach(radio => radio.disabled = true);
-        }
-
-        // Fonction pour afficher les résultats finaux
-        function showResults() {
-            // S'assurer que toutes les questions ont été au moins tentées ou vérifiées
-            let allAttempted = true;
-            for (const qId in userAnswers) {
-                if (userAnswers[qId] === null) { // Si une question n'a pas été vérifiée
-                    const selectedOption = document.querySelector(`input[name="${qId}"]:checked`);
-                    if (!selectedOption) { // Si aucune option n'est sélectionnée pour une question non vérifiée
-                        allAttempted = false;
-                        alert(`Veuillez répondre à la question ${qId.substring(1)} et vérifier votre réponse.`);
-                        break;
-                    } else {
-                        // Si une option est sélectionnée mais pas vérifiée, on la vérifie automatiquement
-                         checkAnswer(qId, correctAnswersDetails[qId].answer);
-                    }
-                }
-            }
-            if (!allAttempted && Object.values(userAnswers).some(ans => ans === null)) return;
-
-
-            const resultsDiv = document.getElementById('results');
-            const scoreP = document.getElementById('score');
-            const summaryP = document.getElementById('summary');
-
-            scoreP.textContent = `Votre score : ${score} / ${totalQuestions}`;
-
-            let summaryText = "";
-            if (score === totalQuestions) {
-                summaryText = "Excellent ! Vous maîtrisez parfaitement les concepts !";
-            } else if (score >= totalQuestions * 0.7) {
-                summaryText = "Très bien ! Vous avez une bonne compréhension des équipes et des canaux.";
-            } else if (score >= totalQuestions * 0.5) {
-                summaryText = "Pas mal ! Quelques révisions pourraient être utiles pour certains points.";
-            } else {
-                summaryText = "Il semble que vous ayez besoin de revoir les concepts. N'hésitez pas à consulter à nouveau le tableau récapitulatif.";
-            }
-            summaryP.textContent = summaryText;
-            resultsDiv.style.display = 'block';
-            document.getElementById('submit-quiz').disabled = true; // Désactiver le bouton après affichage des résultats
-        }
-    </script>
+  <h1>Bienvenue sur les Quiz Teams</h1>
+  <div class="menu">
+    <a href="quiz-debut.html">🎯 Quiz Niveau Débutant</a>
+    <a href="quiz-avance.html">🚀 Quiz Niveau Avancé</a>
+    <a href="quiz-bonus/">✨ Quiz Bonus</a>
+  </div>
 </body>
 </html>
