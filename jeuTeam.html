@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jeu de Classement : Équipes et Canaux Teams</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .game-container {
+            max-width: 900px;
+            width: 100%;
+            background-color: #fff;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+            margin-top: 20px;
+        }
+        h1 {
+            color: #0078d4; /* Couleur bleue Microsoft Teams */
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        .instructions {
+            text-align: center;
+            margin-bottom: 25px;
+            font-size: 1.1em;
+            color: #555;
+        }
+        .game-area {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px; /* Espace entre la source et les catégories */
+            flex-wrap: wrap; /* Permet le retour à la ligne sur petits écrans */
+        }
+        .items-source-container {
+            width: 100%; /* Prend toute la largeur au début sur mobile */
+            margin-bottom: 20px; /* Espace avant les catégories sur mobile */
+        }
+        .items-source-container h3 {
+             margin-top: 0;
+             margin-bottom: 10px;
+             font-size: 1.1em;
+             color: #495057;
+        }
+        .items-source {
+            padding: 15px;
+            background-color: #e9ecef;
+            border: 2px dashed #0078d4;
+            border-radius: 5px;
+            min-height: 100px;
+            display: flex;
+            flex-wrap: wrap; /* Permet aux items de s'enrouler */
+            gap: 10px; /* Espace entre les items */
+            align-content: flex-start; /* Aligne les items en haut */
+        }
+        .categories-container {
+            display: flex;
+            flex-direction: column; /* Organise les catégories verticalement */
+            gap: 15px; /* Espace entre les catégories */
+            flex-grow: 1; /* Permet aux catégories de prendre l'espace restant */
+        }
+
+        .category {
+            background-color: #f8f9fa;
+            border: 1px solid #ced4da;
+            border-radius: 5px;
+            padding: 10px;
+            min-height: 80px; /* Hauteur minimale pour la zone de dépôt */
+        }
+        .category h3 {
+            margin-top: 0;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+            color: #495057;
+            text-align: center;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 5px;
+        }
+        .drop-zone {
+            min-height: 60px; /* Hauteur minimale pour la zone de dépôt interne */
+            background-color: #fff;
+            border: 2px dashed #adb5bd;
+            border-radius: 4px;
+            padding: 8px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            align-content: flex-start;
+        }
+        .draggable-item {
+            padding: 8px 12px;
+            background-color: #0078d4;
+            color: white;
+            border-radius: 4px;
+            cursor: grab;
+            user-select: none; /* Empêche la sélection de texte lors du glisser */
+            transition: opacity 0.2s ease;
+            font-size: 0.95em;
+            /* Les noms des items sont maintenant en minuscules avec underscores */
+        }
+        .draggable-item:active {
+            cursor: grabbing;
+        }
+        .draggable-item.dragging {
+            opacity: 0.5;
+        }
+        .drop-zone.drag-over {
+            background-color: #eef6ff;
+            border-color: #005a9e;
+        }
+        .feedback-item {
+            transition: background-color 0.5s ease;
+        }
+        .feedback-item.correct {
+            background-color: #28a745 !important; /* Vert pour correct */
+            color: white !important;
+        }
+        .feedback-item.incorrect {
+            background-color: #dc3545 !important; /* Rouge pour incorrect */
+            color: white !important;
+        }
+        .controls {
+            text-align: center;
+            margin-top: 30px;
+        }
+        button#check-button {
+            padding: 12px 25px;
+            background-color: #28a745; /* Vert pour le bouton de vérification */
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1.1em;
+            transition: background-color 0.3s ease;
+        }
+        button#check-button:hover {
+            background-color: #218838;
+        }
+        #results-summary {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e9ecef;
+            border-radius: 5px;
+            text-align: center;
+            font-size: 1.1em;
+        }
+        #results-summary h3 {
+            margin-top: 0;
+            color: #0078d4;
+        }
+
+        /* Adaptation pour les écrans plus larges */
+        @media (min-width: 768px) {
+            .game-area {
+                flex-wrap: nowrap; /* Empêche le retour à la ligne */
+            }
+            .items-source-container {
+                width: 35%; /* Largeur pour la source des items */
+                margin-bottom: 0;
+            }
+            .categories-container {
+                width: 60%; /* Largeur pour les catégories */
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <h1>Jeu de Classement : Équipes et Canaux</h1>
+        <p class="instructions">Faites glisser chaque élément de la zone "Éléments à classer" vers la catégorie appropriée ci-dessous.</p>
+
+        <div class="game-area">
+            <div class="items-source-container">
+                <h3>Éléments à classer :</h3>
+                <div id="items-source" class="items-source drop-zone">
+                    </div>
+            </div>
+
+            <div class="categories-container">
+                <div class="category">
+                    <h3>Noms d'équipes</h3>
+                    <div id="cat-equipe" class="drop-zone" data-category="equipe"></div>
+                </div>
+                <div class="category">
+                    <h3>Canaux standards</h3>
+                    <div id="cat-standard" class="drop-zone" data-category="standard"></div>
+                </div>
+                <div class="category">
+                    <h3>Canaux privés</h3>
+                    <div id="cat-prive" class="drop-zone" data-category="prive"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="controls">
+            <button id="check-button">Vérifier mes classements</button>
+        </div>
+        <div id="results-summary" style="display:none;">
+            <h3>Résultats</h3>
+            <p id="score-message"></p>
+        </div>
+    </div>
+
+    <script>
+        const itemsData = [
+            { id: 'item1', text: 'équipe_séniors_a_-_football', category: 'equipe' },
+            { id: 'item2', text: 'marketing_et_communication_du_club', category: 'equipe' },
+            { id: 'item3', text: 'entraînements_et_planification', category: 'standard' }, // Anciennement #_ENTRAÎNEMENTS_ET_PLANIFICATION
+            { id: 'item4', text: 'réseaux_sociaux_et_contenus', category: 'standard' }, // Anciennement #_RÉSEAUX_SOCIAUX_ET_CONTENUS
+            { id: 'item5', text: 'discussion_staff_technique', category: 'prive' }, 
+            { id: 'item6', text: 'budget_marketing_confidentiel', category: 'prive' }, 
+            { id: 'item8', text: 'organisation_tournoi_jeunes', category: 'equipe' }, 
+            { id: 'item9', text: 'stratégie_de_match', category: 'standard' }, 
+            { id: 'item10', text: 'partenariats_club', category: 'standard' }, 
+            { id: 'item11', text: 'recrutement_joueurs_confidentiel', category: 'prive' } 
+        ];
+
+        const itemsSourceContainer = document.getElementById('items-source');
+        const dropZones = document.querySelectorAll('.drop-zone'); // Ceci inclut items-source
+        const categoryDropZones = Array.from(dropZones).filter(zone => zone.id !== 'items-source'); // Zones de dépôt des catégories uniquement
+        const checkButton = document.getElementById('check-button');
+        const resultsSummary = document.getElementById('results-summary');
+        const scoreMessage = document.getElementById('score-message');
+
+        let draggedItem = null;
+
+        // Mélanger et afficher les items
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        function initializeItems() {
+            itemsSourceContainer.innerHTML = ''; // Vider la zone source avant de la remplir
+            shuffleArray(itemsData);
+            itemsData.forEach(item => {
+                const div = document.createElement('div');
+                div.textContent = item.text;
+                div.id = item.id;
+                div.className = 'draggable-item';
+                div.draggable = true;
+                div.dataset.correctCategory = item.category; // Stocker la catégorie correcte
+                itemsSourceContainer.appendChild(div);
+            });
+            addDragListeners();
+        }
+
+        function addDragListeners() {
+            const draggableItems = document.querySelectorAll('.draggable-item');
+            draggableItems.forEach(item => {
+                item.addEventListener('dragstart', handleDragStart);
+                item.addEventListener('dragend', handleDragEnd);
+            });
+        }
+
+        function handleDragStart(e) {
+            draggedItem = e.target;
+            e.dataTransfer.setData('text/plain', e.target.id); // Nécessaire pour Firefox
+            setTimeout(() => {
+                if (draggedItem) draggedItem.classList.add('dragging');
+            }, 0);
+        }
+
+        function handleDragEnd(e) {
+            if (draggedItem) {
+                draggedItem.classList.remove('dragging');
+            }
+            draggedItem = null;
+        }
+
+        dropZones.forEach(zone => {
+            zone.addEventListener('dragover', handleDragOver);
+            zone.addEventListener('dragenter', handleDragEnter);
+            zone.addEventListener('dragleave', handleDragLeave);
+            zone.addEventListener('drop', handleDrop);
+        });
+
+        function handleDragOver(e) {
+            e.preventDefault(); // Nécessaire pour permettre le dépôt
+        }
+
+        function handleDragEnter(e) {
+            // S'assurer que l'élément cible est une zone de dépôt valide
+            const targetZone = e.target.closest('.drop-zone');
+            if (targetZone) {
+                targetZone.classList.add('drag-over');
+            }
+        }
+
+        function handleDragLeave(e) {
+            // S'assurer que l'élément cible est une zone de dépôt valide
+            const targetZone = e.target.closest('.drop-zone');
+            if (targetZone) {
+                targetZone.classList.remove('drag-over');
+            }
+        }
+
+        function handleDrop(e) {
+            e.preventDefault();
+            const targetZone = e.target.closest('.drop-zone');
+            if (targetZone && draggedItem) {
+                targetZone.appendChild(draggedItem);
+                targetZone.classList.remove('drag-over');
+                // Réinitialiser le style si l'item avait été vérifié précédemment
+                draggedItem.classList.remove('correct', 'incorrect', 'feedback-item');
+            }
+        }
+
+        checkButton.addEventListener('click', () => {
+            let correctCount = 0;
+            let totalPlacedInCategories = 0;
+
+            categoryDropZones.forEach(zone => { // Itérer seulement sur les zones de catégories
+                const zoneCategory = zone.dataset.category;
+                const itemsInZone = zone.querySelectorAll('.draggable-item');
+
+                itemsInZone.forEach(item => {
+                    totalPlacedInCategories++;
+                    item.classList.add('feedback-item');
+                    if (item.dataset.correctCategory === zoneCategory) {
+                        item.classList.remove('incorrect');
+                        item.classList.add('correct');
+                        correctCount++;
+                    } else {
+                        item.classList.remove('correct');
+                        item.classList.add('incorrect');
+                    }
+                });
+            });
+            
+            // Les items restants dans la source sont considérés comme non classés ou mal classés
+            const itemsStillInSource = itemsSourceContainer.querySelectorAll('.draggable-item');
+            itemsStillInSource.forEach(item => {
+                 item.classList.add('feedback-item', 'incorrect'); // Marquer comme incorrect s'ils restent dans la source
+            });
+
+            const totalItemsToClassify = itemsData.length;
+
+            if (totalPlacedInCategories === 0 && itemsStillInSource.length === totalItemsToClassify) {
+                 scoreMessage.textContent = "Veuillez classer les éléments avant de vérifier.";
+            } else {
+                scoreMessage.textContent = `Vous avez correctement classé ${correctCount} élément(s) sur ${totalItemsToClassify}.`;
+            }
+            resultsSummary.style.display = 'block';
+        });
+
+        // Initialiser le jeu
+        initializeItems();
+    </script>
+</body>
+</html>
